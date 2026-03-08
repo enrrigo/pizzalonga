@@ -20,10 +20,8 @@ box-sizing:border-box;
 body{
 margin:0;
 font-family:'Montserrat',sans-serif;
-background:
-linear-gradient(rgba(0,0,0,.85),rgba(0,0,0,.85)),
-url("images/sfondo.jpg") center/cover no-repeat fixed;
-color:#fff;
+background:white;
+color:#111;
 }
 
 /* START SCREEN */
@@ -31,7 +29,7 @@ color:#fff;
 #start{
 position:fixed;
 inset:0;
-background:#000;
+background:white;
 display:flex;
 align-items:center;
 justify-content:center;
@@ -84,23 +82,11 @@ margin-bottom:18px;
 /* LIST */
 
 .list{
-position:relative;
 max-height:260px;
 overflow-y:auto;
 border-radius:18px;
-background:#111;
+background:#f6f6f6;
 padding:10px 0;
-}
-
-.list::after{
-content:"";
-position:absolute;
-top:50%;
-left:20px;
-right:20px;
-height:2px;
-background:rgba(227,6,19,.5);
-pointer-events:none;
 }
 
 /* ITEM */
@@ -108,13 +94,13 @@ pointer-events:none;
 .item{
 margin:14px;
 padding:18px;
-background:#000;
+background:white;
 border-radius:14px;
 text-align:center;
 font-family:'Dancing Script',cursive;
 font-size:26px;
 cursor:pointer;
-border:1px solid rgba(227,6,19,.4);
+border:1px solid rgba(227,6,19,.3);
 transition:.2s;
 }
 
@@ -144,9 +130,8 @@ z-index:5;
 #pizzaTitle{
 font-family:'Dancing Script',cursive;
 font-size:40px;
-color:white;
+color:#111;
 margin-top:40px;
-text-shadow:0 4px 20px rgba(0,0,0,.8);
 }
 
 /* SHADOW */
@@ -158,7 +143,7 @@ left:50%;
 width:240px;
 height:80px;
 transform:translateX(-50%);
-background:radial-gradient(ellipse at center, rgba(0,0,0,.6), transparent 70%);
+background:radial-gradient(ellipse at center, rgba(0,0,0,.4), transparent 70%);
 filter:blur(10px);
 pointer-events:none;
 display:none;
@@ -181,7 +166,7 @@ display:none;
 position:absolute;
 width:20px;
 height:120px;
-background:linear-gradient(transparent,rgba(255,255,255,.35),transparent);
+background:linear-gradient(transparent,rgba(0,0,0,.25),transparent);
 border-radius:40px;
 filter:blur(6px);
 animation:steam 3s infinite ease-in-out;
@@ -193,7 +178,7 @@ animation:steam 3s infinite ease-in-out;
 
 @keyframes steam{
 0%{transform:translateY(0) scaleX(1);opacity:0}
-40%{opacity:.6}
+40%{opacity:.5}
 100%{transform:translateY(-140px) scaleX(1.5);opacity:0}
 }
 
@@ -206,7 +191,6 @@ animation:steam 3s infinite ease-in-out;
 <button onclick="enter()">Entra</button>
 </div>
 
-<audio id="tick" src="sounds/din.mp3" preload="auto"></audio>
 <audio id="dish" src="sounds/piatti.mp3" preload="auto"></audio>
 
 <header>
@@ -218,21 +202,30 @@ animation:steam 3s infinite ease-in-out;
 <div class="section">
 <div class="section-title">Pizze Classiche</div>
 
-<div class="list" onscroll="checkCenter(this)">
+<div class="list">
+
 <div class="item" onclick="openAR('pizza','Margherita')">Margherita</div>
+
 <div class="item" onclick="openAR('pizza','Diavola')">Diavola</div>
-<div class="item" onclick="openAR('pizza','Capricciosa')">Capricciosa</div>
+
+<div class="item" onclick="openAR('pizza_ballerina','Capricciosa')">Capricciosa</div>
+
 <div class="item" onclick="openAR('pizza','Quattro Formaggi')">Quattro Formaggi</div>
+
 </div>
 </div>
 
 <div class="section">
 <div class="section-title">Pizze Speciali</div>
 
-<div class="list" onscroll="checkCenter(this)">
+<div class="list">
+
 <div class="item" onclick="openAR('pizza','Burrata')">Burrata</div>
-<div class="item" onclick="openAR('pizza','Tartufo')">Tartufo</div>
-<div class="item" onclick="openAR('pizza','Porcini')">Porcini</div>
+
+<div class="item" onclick="openAR('pizza','Diavola')">Diavola</div>
+
+<div class="item" onclick="openAR('pizza_ballerina','Capricciosa')">Capricciosa</div>
+
 </div>
 </div>
 
@@ -265,47 +258,13 @@ interaction-prompt="none">
 <script>
 
 let unlocked=false;
-const lastIndex=new WeakMap();
 
 function enter(){
 unlocked=true;
 document.getElementById("start").style.display="none";
 }
 
-function checkCenter(list){
-
-if(!unlocked) return;
-
-const listRect=list.getBoundingClientRect();
-const centerY=listRect.top + listRect.height/2;
-const items=list.querySelectorAll(".item");
-
-items.forEach((item,i)=>{
-
-const rect=item.getBoundingClientRect();
-const itemCenter=rect.top + rect.height/2;
-
-if(Math.abs(itemCenter-centerY) < 12){
-
-if(lastIndex.get(list)!==i){
-
-lastIndex.set(list,i);
-
-const tick=document.getElementById("tick");
-tick.currentTime=0;
-tick.play().catch(()=>{});
-
-if(navigator.vibrate) navigator.vibrate(8);
-
-}
-
-}
-
-});
-
-}
-
-function openAR(type,name){
+function openAR(model,name){
 
 if(!unlocked) return;
 
@@ -321,8 +280,6 @@ const viewer=document.getElementById("ar");
 
 viewer.style.display="block";
 
-/* animazione entrata */
-
 viewer.style.transform="scale(.2)";
 viewer.style.opacity="0";
 
@@ -332,13 +289,8 @@ viewer.style.transform="scale(1)";
 viewer.style.opacity="1";
 },30);
 
-if(type==="pizza"){
-viewer.src="models/pizza.glb";
-viewer.setAttribute("ios-src","models/pizza.usdz");
-}else{
-viewer.src="models/panino.glb";
-viewer.setAttribute("ios-src","models/panino.usdz");
-}
+viewer.src="models/"+model+".glb";
+viewer.setAttribute("ios-src","models/"+model+".usdz");
 
 viewer.activateAR();
 
