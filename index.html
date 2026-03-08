@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>Pizzalunga – Menu AR</title>
+
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Dancing+Script:wght@600;700&display=swap');
+
+*{
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
+}
+
+body{
+margin:0;
+font-family:'Montserrat',sans-serif;
+background:
+linear-gradient(rgba(0,0,0,.85),rgba(0,0,0,.85)),
+url("images/sfondo.jpg") center/cover no-repeat fixed;
+color:#fff;
+}
+
+/* START SCREEN */
+
+#start{
+position:fixed;
+inset:0;
+background:#000;
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:50;
+}
+
+#start button{
+font-family:'Dancing Script',cursive;
+font-size:36px;
+padding:20px 60px;
+border-radius:40px;
+border:none;
+background:#e30613;
+color:white;
+}
+
+/* HEADER */
+
+header{
+padding:20px 14px 10px;
+text-align:center;
+}
+
+header img{
+width:100%;
+max-height:140px;
+object-fit:contain;
+}
+
+/* MENU */
+
+.menu{
+height:calc(100vh - 180px);
+overflow-y:auto;
+padding:12px;
+}
+
+.section{
+margin-bottom:32px;
+}
+
+.section-title{
+font-family:'Dancing Script',cursive;
+font-size:32px;
+text-align:center;
+color:#e30613;
+margin-bottom:18px;
+}
+
+/* LIST */
+
+.list{
+position:relative;
+max-height:260px;
+overflow-y:auto;
+border-radius:18px;
+background:#111;
+padding:10px 0;
+}
+
+.list::after{
+content:"";
+position:absolute;
+top:50%;
+left:20px;
+right:20px;
+height:2px;
+background:rgba(227,6,19,.5);
+pointer-events:none;
+}
+
+/* ITEM */
+
+.item{
+margin:14px;
+padding:18px;
+background:#000;
+border-radius:14px;
+text-align:center;
+font-family:'Dancing Script',cursive;
+font-size:26px;
+cursor:pointer;
+border:1px solid rgba(227,6,19,.4);
+transition:.2s;
+}
+
+.item:hover{
+transform:scale(1.04);
+border-color:#e30613;
+}
+
+/* MODEL VIEWER */
+
+model-viewer{
+display:none;
+}
+
+/* AR OVERLAY */
+
+#arOverlay{
+position:fixed;
+top:0;
+left:0;
+right:0;
+pointer-events:none;
+text-align:center;
+z-index:5;
+}
+
+#pizzaTitle{
+font-family:'Dancing Script',cursive;
+font-size:40px;
+color:white;
+margin-top:40px;
+text-shadow:0 4px 20px rgba(0,0,0,.8);
+}
+
+/* SHADOW */
+
+#shadow{
+position:fixed;
+bottom:120px;
+left:50%;
+width:240px;
+height:80px;
+transform:translateX(-50%);
+background:radial-gradient(ellipse at center, rgba(0,0,0,.6), transparent 70%);
+filter:blur(10px);
+pointer-events:none;
+display:none;
+}
+
+/* STEAM EFFECT */
+
+#steam{
+position:fixed;
+bottom:180px;
+left:50%;
+width:200px;
+height:200px;
+transform:translateX(-50%);
+pointer-events:none;
+display:none;
+}
+
+.steam{
+position:absolute;
+width:20px;
+height:120px;
+background:linear-gradient(transparent,rgba(255,255,255,.35),transparent);
+border-radius:40px;
+filter:blur(6px);
+animation:steam 3s infinite ease-in-out;
+}
+
+.steam:nth-child(2){left:40px;animation-delay:.5s}
+.steam:nth-child(3){left:80px;animation-delay:1s}
+.steam:nth-child(4){left:120px;animation-delay:1.5s}
+
+@keyframes steam{
+0%{transform:translateY(0) scaleX(1);opacity:0}
+40%{opacity:.6}
+100%{transform:translateY(-140px) scaleX(1.5);opacity:0}
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="start">
+<button onclick="enter()">Entra</button>
+</div>
+
+<audio id="tick" src="sounds/din.mp3" preload="auto"></audio>
+<audio id="dish" src="sounds/piatti.mp3" preload="auto"></audio>
+
+<header>
+<img src="images/logo.png">
+</header>
+
+<div class="menu">
+
+<div class="section">
+<div class="section-title">Pizze Classiche</div>
+
+<div class="list" onscroll="checkCenter(this)">
+<div class="item" onclick="openAR('pizza','Margherita')">Margherita</div>
+<div class="item" onclick="openAR('pizza','Diavola')">Diavola</div>
+<div class="item" onclick="openAR('pizza','Capricciosa')">Capricciosa</div>
+<div class="item" onclick="openAR('pizza','Quattro Formaggi')">Quattro Formaggi</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Pizze Speciali</div>
+
+<div class="list" onscroll="checkCenter(this)">
+<div class="item" onclick="openAR('pizza','Burrata')">Burrata</div>
+<div class="item" onclick="openAR('pizza','Tartufo')">Tartufo</div>
+<div class="item" onclick="openAR('pizza','Porcini')">Porcini</div>
+</div>
+</div>
+
+</div>
+
+<div id="arOverlay">
+<div id="pizzaTitle"></div>
+</div>
+
+<div id="shadow"></div>
+
+<div id="steam">
+<div class="steam"></div>
+<div class="steam"></div>
+<div class="steam"></div>
+<div class="steam"></div>
+</div>
+
+<model-viewer
+id="ar"
+ar
+ar-modes="scene-viewer quick-look webxr"
+ar-scale="fixed"
+camera-controls
+shadow-intensity="1"
+exposure="1"
+interaction-prompt="none">
+</model-viewer>
+
+<script>
+
+let unlocked=false;
+const lastIndex=new WeakMap();
+
+function enter(){
+unlocked=true;
+document.getElementById("start").style.display="none";
+}
+
+function checkCenter(list){
+
+if(!unlocked) return;
+
+const listRect=list.getBoundingClientRect();
+const centerY=listRect.top + listRect.height/2;
+const items=list.querySelectorAll(".item");
+
+items.forEach((item,i)=>{
+
+const rect=item.getBoundingClientRect();
+const itemCenter=rect.top + rect.height/2;
+
+if(Math.abs(itemCenter-centerY) < 12){
+
+if(lastIndex.get(list)!==i){
+
+lastIndex.set(list,i);
+
+const tick=document.getElementById("tick");
+tick.currentTime=0;
+tick.play().catch(()=>{});
+
+if(navigator.vibrate) navigator.vibrate(8);
+
+}
+
+}
+
+});
+
+}
+
+function openAR(type,name){
+
+if(!unlocked) return;
+
+const dish=document.getElementById("dish");
+dish.currentTime=0;
+dish.play().catch(()=>{});
+
+document.getElementById("pizzaTitle").innerText=name;
+document.getElementById("shadow").style.display="block";
+document.getElementById("steam").style.display="block";
+
+const viewer=document.getElementById("ar");
+
+viewer.style.display="block";
+
+/* animazione entrata */
+
+viewer.style.transform="scale(.2)";
+viewer.style.opacity="0";
+
+setTimeout(()=>{
+viewer.style.transition="all .5s cubic-bezier(.2,.8,.2,1)";
+viewer.style.transform="scale(1)";
+viewer.style.opacity="1";
+},30);
+
+if(type==="pizza"){
+viewer.src="models/pizza.glb";
+viewer.setAttribute("ios-src","models/pizza.usdz");
+}else{
+viewer.src="models/panino.glb";
+viewer.setAttribute("ios-src","models/panino.usdz");
+}
+
+viewer.activateAR();
+
+}
+
+</script>
+
+</body>
+</html>
