@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="it">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-<title>Pizzalunga – Menu AR</title>
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Pizzalonga AR Menu</title>
 
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
-<style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Dancing+Script:wght@600;700&display=swap');
+<style>
 
 *{
 box-sizing:border-box;
@@ -18,157 +20,234 @@ box-sizing:border-box;
 }
 
 body{
+
 margin:0;
-font-family:'Montserrat',sans-serif;
-background:white;
+background:#ffffff;
+font-family:'Inter',sans-serif;
 color:#111;
+
 }
 
-/* SCHERMATA INIZIALE */
+/* START SCREEN */
 
 #start{
+
 position:fixed;
 inset:0;
-background:white;
 display:flex;
 align-items:center;
 justify-content:center;
-z-index:10;
+background:white;
+z-index:20;
+
 }
 
-#start button{
-font-family:'Dancing Script',cursive;
-font-size:38px;
+#enterBtn{
+
+font-size:28px;
 padding:22px 70px;
-border-radius:40px;
+border-radius:50px;
 border:none;
-background:#e30613;
+background:black;
 color:white;
+cursor:pointer;
+transition:all .25s;
+
+}
+
+#enterBtn:hover{
+
+transform:scale(1.05);
+
 }
 
 /* HEADER */
 
 header{
-padding:20px 14px 10px;
+
 text-align:center;
+padding:30px 20px;
+
 }
 
 header img{
-width:100%;
-max-height:140px;
-object-fit:contain;
+
+width:200px;
+max-width:80%;
+
 }
 
 /* MENU */
 
 .menu{
-padding:16px;
+
+max-width:600px;
+margin:auto;
+padding:10px 20px 40px;
+
 }
 
-/* SEZIONI MENU */
+/* SEZIONE */
 
 .section{
 
-border:2px solid #e30613;
-border-radius:20px;
-padding:16px;
-margin-bottom:30px;
 background:white;
+border-radius:26px;
+padding:24px;
+margin-bottom:30px;
+
+border:1px solid #eee;
+
+box-shadow:
+
+0 10px 30px rgba(0,0,0,0.04);
 
 }
 
 .section-title{
+
 font-family:'Dancing Script',cursive;
 font-size:34px;
 text-align:center;
-color:#e30613;
 margin-bottom:20px;
+
 }
 
-/* LISTA PIZZE */
+/* LISTA */
 
 .list{
+
 display:flex;
 flex-direction:column;
 gap:14px;
+
 }
 
-/* PIZZA */
+/* ITEM PIZZA */
 
 .item{
+
 padding:18px;
+border-radius:16px;
+
 background:#fafafa;
-border-radius:14px;
+
+font-size:20px;
 text-align:center;
-font-family:'Dancing Script',cursive;
-font-size:28px;
+
 cursor:pointer;
-border:1px solid rgba(0,0,0,.1);
-transition:.2s;
+
+transition:all .2s;
+
+border:1px solid #eee;
+
 }
 
 .item:hover{
-transform:scale(1.03);
-border-color:#e30613;
+
+background:#f1f1f1;
+transform:scale(1.02);
+
 }
 
 /* MODEL VIEWER NASCOSTO */
 
 model-viewer{
+
 position:absolute;
 width:1px;
 height:1px;
 opacity:0;
-pointer-events:none;
+
 }
 
 </style>
+
 </head>
 
 <body>
 
 <div id="start">
-<button onclick="enter()">Entra</button>
+
+<button id="enterBtn" onclick="enterMenu()">Entra</button>
+
 </div>
 
-<audio id="dish" src="sounds/piatti.mp3" preload="auto"></audio>
+<audio id="sound" src="sounds/piatti.mp3" preload="auto"></audio>
 
 <header>
+
 <img src="images/logo.png">
+
 </header>
 
 <div class="menu">
 
 <div class="section">
 
-<div class="section-title">Pizze Classiche</div>
+<div class="section-title">
+
+Pizze Classiche
+
+</div>
 
 <div class="list">
 
-<div class="item" onclick="openAR('pizza')">Margherita</div>
+<div class="item" onclick="openAR('pizza')">
 
-<div class="item" onclick="openAR('pizza')">Diavola</div>
+Margherita
 
-<div class="item" onclick="openAR('pizzaballerina')">Capricciosa</div>
+</div>
 
-<div class="item" onclick="openAR('pizza')">Quattro Formaggi</div>
+<div class="item" onclick="openAR('pizza')">
+
+Diavola
+
+</div>
+
+<div class="item" onclick="openAR('pizzaballerina')">
+
+Capricciosa
+
+</div>
+
+<div class="item" onclick="openAR('pizza')">
+
+Quattro Formaggi
 
 </div>
 
 </div>
 
+</div>
 
 <div class="section">
 
-<div class="section-title">Pizze Speciali</div>
+<div class="section-title">
+
+Pizze Speciali
+
+</div>
 
 <div class="list">
 
-<div class="item" onclick="openAR('pizza')">Burrata</div>
+<div class="item" onclick="openAR('pizza')">
 
-<div class="item" onclick="openAR('pizza')">Diavola</div>
+Burrata
 
-<div class="item" onclick="openAR('pizzaballerina')">Capricciosa</div>
+</div>
+
+<div class="item" onclick="openAR('pizza')">
+
+Diavola Piccante
+
+</div>
+
+<div class="item" onclick="openAR('pizzaballerina')">
+
+Capricciosa Deluxe
+
+</div>
 
 </div>
 
@@ -177,47 +256,51 @@ pointer-events:none;
 </div>
 
 <model-viewer
-id="ar"
+
+id="arViewer"
+
 ar
+
 ar-modes="scene-viewer quick-look webxr"
+
 ar-scale="fixed"
+
 camera-controls
-interaction-prompt="none">
+
+interaction-prompt="none"
+
+>
+
 </model-viewer>
 
 <script>
 
-let unlocked=false;
+let unlocked=false
 
-function enter(){
-unlocked=true;
-document.getElementById("start").style.display="none";
+function enterMenu(){
+
+unlocked=true
+
+document.getElementById("start").style.display="none"
+
 }
 
 function openAR(model){
 
-if(!unlocked) return;
+if(!unlocked) return
 
-const dish=document.getElementById("dish");
+const sound=document.getElementById("sound")
 
-dish.currentTime=0;
-dish.play().catch(()=>{});
+sound.currentTime=0
+sound.play().catch(()=>{})
 
-const viewer=document.getElementById("ar");
+const viewer=document.getElementById("arViewer")
 
-/* reset modello */
+viewer.src="models/"+model+".glb"
 
-viewer.src="";
-viewer.removeAttribute("ios-src");
+viewer.setAttribute("ios-src","models/"+model+".usdz")
 
-/* carica modello */
-
-viewer.src="models/"+model+".glb";
-viewer.setAttribute("ios-src","models/"+model+".usdz");
-
-/* avvia AR */
-
-viewer.activateAR();
+viewer.activateAR()
 
 }
 
