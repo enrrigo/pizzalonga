@@ -24,7 +24,7 @@ background:white;
 color:#111;
 }
 
-/* START SCREEN */
+/* SCHERMATA INIZIALE */
 
 #start{
 position:fixed;
@@ -33,13 +33,13 @@ background:white;
 display:flex;
 align-items:center;
 justify-content:center;
-z-index:50;
+z-index:10;
 }
 
 #start button{
 font-family:'Dancing Script',cursive;
-font-size:36px;
-padding:20px 60px;
+font-size:38px;
+padding:22px 70px;
 border-radius:40px;
 border:none;
 background:#e30613;
@@ -62,124 +62,64 @@ object-fit:contain;
 /* MENU */
 
 .menu{
-height:calc(100vh - 180px);
-overflow-y:auto;
-padding:12px;
+padding:16px;
 }
 
+/* SEZIONI MENU */
+
 .section{
-margin-bottom:32px;
+
+border:2px solid #e30613;
+border-radius:20px;
+padding:16px;
+margin-bottom:30px;
+background:white;
+
 }
 
 .section-title{
 font-family:'Dancing Script',cursive;
-font-size:32px;
+font-size:34px;
 text-align:center;
 color:#e30613;
-margin-bottom:18px;
+margin-bottom:20px;
 }
 
-/* LIST */
+/* LISTA PIZZE */
 
 .list{
-max-height:260px;
-overflow-y:auto;
-border-radius:18px;
-background:#f6f6f6;
-padding:10px 0;
+display:flex;
+flex-direction:column;
+gap:14px;
 }
 
-/* ITEM */
+/* PIZZA */
 
 .item{
-margin:14px;
 padding:18px;
-background:white;
+background:#fafafa;
 border-radius:14px;
 text-align:center;
 font-family:'Dancing Script',cursive;
-font-size:26px;
+font-size:28px;
 cursor:pointer;
-border:1px solid rgba(227,6,19,.3);
+border:1px solid rgba(0,0,0,.1);
 transition:.2s;
 }
 
 .item:hover{
-transform:scale(1.04);
+transform:scale(1.03);
 border-color:#e30613;
 }
 
-/* MODEL VIEWER */
+/* MODEL VIEWER NASCOSTO */
 
 model-viewer{
-display:none;
-}
-
-/* AR OVERLAY */
-
-#arOverlay{
-position:fixed;
-top:0;
-left:0;
-right:0;
-pointer-events:none;
-text-align:center;
-z-index:5;
-}
-
-#pizzaTitle{
-font-family:'Dancing Script',cursive;
-font-size:40px;
-color:#111;
-margin-top:40px;
-}
-
-/* SHADOW */
-
-#shadow{
-position:fixed;
-bottom:120px;
-left:50%;
-width:240px;
-height:80px;
-transform:translateX(-50%);
-background:radial-gradient(ellipse at center, rgba(0,0,0,.4), transparent 70%);
-filter:blur(10px);
-pointer-events:none;
-display:none;
-}
-
-/* STEAM EFFECT */
-
-#steam{
-position:fixed;
-bottom:180px;
-left:50%;
-width:200px;
-height:200px;
-transform:translateX(-50%);
-pointer-events:none;
-display:none;
-}
-
-.steam{
 position:absolute;
-width:20px;
-height:120px;
-background:linear-gradient(transparent,rgba(0,0,0,.25),transparent);
-border-radius:40px;
-filter:blur(6px);
-animation:steam 3s infinite ease-in-out;
-}
-
-.steam:nth-child(2){left:40px;animation-delay:.5s}
-.steam:nth-child(3){left:80px;animation-delay:1s}
-.steam:nth-child(4){left:120px;animation-delay:1.5s}
-
-@keyframes steam{
-0%{transform:translateY(0) scaleX(1);opacity:0}
-40%{opacity:.5}
-100%{transform:translateY(-140px) scaleX(1.5);opacity:0}
+width:1px;
+height:1px;
+opacity:0;
+pointer-events:none;
 }
 
 </style>
@@ -200,48 +140,40 @@ animation:steam 3s infinite ease-in-out;
 <div class="menu">
 
 <div class="section">
+
 <div class="section-title">Pizze Classiche</div>
 
 <div class="list">
 
-<div class="item" onclick="openAR('pizza','Margherita')">Margherita</div>
+<div class="item" onclick="openAR('pizza')">Margherita</div>
 
-<div class="item" onclick="openAR('pizza','Diavola')">Diavola</div>
+<div class="item" onclick="openAR('pizza')">Diavola</div>
 
-<div class="item" onclick="openAR('pizza_ballerina','Capricciosa')">Capricciosa</div>
+<div class="item" onclick="openAR('pizzaballerina')">Capricciosa</div>
 
-<div class="item" onclick="openAR('pizza','Quattro Formaggi')">Quattro Formaggi</div>
+<div class="item" onclick="openAR('pizza')">Quattro Formaggi</div>
 
 </div>
+
 </div>
+
 
 <div class="section">
+
 <div class="section-title">Pizze Speciali</div>
 
 <div class="list">
 
-<div class="item" onclick="openAR('pizza','Burrata')">Burrata</div>
+<div class="item" onclick="openAR('pizza')">Burrata</div>
 
-<div class="item" onclick="openAR('pizza','Diavola')">Diavola</div>
+<div class="item" onclick="openAR('pizza')">Diavola</div>
 
-<div class="item" onclick="openAR('pizzaballerina','Capricciosa')">Capricciosa</div>
-
-</div>
-</div>
+<div class="item" onclick="openAR('pizzaballerina')">Capricciosa</div>
 
 </div>
 
-<div id="arOverlay">
-<div id="pizzaTitle"></div>
 </div>
 
-<div id="shadow"></div>
-
-<div id="steam">
-<div class="steam"></div>
-<div class="steam"></div>
-<div class="steam"></div>
-<div class="steam"></div>
 </div>
 
 <model-viewer
@@ -250,8 +182,6 @@ ar
 ar-modes="scene-viewer quick-look webxr"
 ar-scale="fixed"
 camera-controls
-shadow-intensity="1"
-exposure="1"
 interaction-prompt="none">
 </model-viewer>
 
@@ -264,33 +194,28 @@ unlocked=true;
 document.getElementById("start").style.display="none";
 }
 
-function openAR(model,name){
+function openAR(model){
 
 if(!unlocked) return;
 
 const dish=document.getElementById("dish");
+
 dish.currentTime=0;
 dish.play().catch(()=>{});
 
-document.getElementById("pizzaTitle").innerText=name;
-document.getElementById("shadow").style.display="block";
-document.getElementById("steam").style.display="block";
-
 const viewer=document.getElementById("ar");
 
-viewer.style.display="block";
+/* reset modello */
 
-viewer.style.transform="scale(.2)";
-viewer.style.opacity="0";
+viewer.src="";
+viewer.removeAttribute("ios-src");
 
-setTimeout(()=>{
-viewer.style.transition="all .5s cubic-bezier(.2,.8,.2,1)";
-viewer.style.transform="scale(1)";
-viewer.style.opacity="1";
-},30);
+/* carica modello */
 
 viewer.src="models/"+model+".glb";
 viewer.setAttribute("ios-src","models/"+model+".usdz");
+
+/* avvia AR */
 
 viewer.activateAR();
 
