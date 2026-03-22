@@ -1,227 +1,156 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interior Design Portfolio 3D</title>
+    
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 
-<title>Pizzalunga – Menu AR</title>
+    <style>
+        :root {
+            --gold: #c5a059;
+            --dark: #1a1a1a;
+            --white: #ffffff;
+        }
 
-<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+        body, html {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--dark);
+            color: var(--white);
+            overflow: hidden;
+        }
 
-<style>
+        /* Schermata di Ingresso */
+        #splash-screen {
+            position: fixed; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80') center/cover;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 100; transition: 0.5s;
+        }
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Dancing+Script:wght@600;700&display=swap');
+        /* Menu Principale */
+        #main-menu {
+            display: none; height: 100vh;
+            padding: 20px; box-sizing: border-box;
+            background: #121212;
+        }
 
-*{
-box-sizing:border-box;
--webkit-tap-highlight-color:transparent;
-}
+        .category-btn {
+            background: transparent; border: 1px solid var(--gold);
+            color: var(--gold); padding: 15px; margin: 10px 0;
+            width: 100%; font-size: 1.2rem; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 2px;
+        }
 
-body{
-margin:0;
-font-family:'Montserrat',sans-serif;
-background:white;
-color:#111;
-}
+        /* Lista Progetti */
+        .project-list {
+            display: none; margin-top: 20px;
+        }
 
-/* SCHERMATA INIZIALE */
+        .project-item {
+            padding: 10px; border-bottom: 1px solid #333;
+            cursor: pointer; display: flex; justify-content: space-between;
+        }
 
-#start{
-position:fixed;
-inset:0;
-background:white;
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:10;
-}
+        /* Container 3D */
+        #viewer-container {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: white; z-index: 200;
+        }
 
-#start button{
-font-family:'Dancing Script',cursive;
-font-size:38px;
-padding:22px 70px;
-border-radius:40px;
-border:none;
-background:#e30613;
-color:white;
-}
+        model-viewer {
+            width: 100%; height: 90%;
+            --poster-color: transparent;
+        }
 
-/* HEADER */
+        .back-btn {
+            position: absolute; top: 20px; left: 20px;
+            padding: 10px 20px; background: var(--dark);
+            color: white; border: none; z-index: 201;
+        }
 
-header{
-padding:20px 14px 10px;
-text-align:center;
-}
-
-header img{
-width:100%;
-max-height:140px;
-object-fit:contain;
-}
-
-/* MENU */
-
-.menu{
-padding:16px;
-}
-
-/* SEZIONI MENU */
-
-.section{
-
-border:2px solid #e30613;
-border-radius:20px;
-padding:16px;
-margin-bottom:30px;
-background:white;
-
-}
-
-.section-title{
-font-family:'Dancing Script',cursive;
-font-size:34px;
-text-align:center;
-color:#e30613;
-margin-bottom:20px;
-}
-
-/* LISTA PIZZE */
-
-.list{
-display:flex;
-flex-direction:column;
-gap:14px;
-}
-
-/* PIZZA */
-
-.item{
-padding:18px;
-background:#fafafa;
-border-radius:14px;
-text-align:center;
-font-family:'Dancing Script',cursive;
-font-size:28px;
-cursor:pointer;
-border:1px solid rgba(0,0,0,.1);
-transition:.2s;
-}
-
-.item:hover{
-transform:scale(1.03);
-border-color:#e30613;
-}
-
-/* MODEL VIEWER NASCOSTO */
-
-model-viewer{
-position:absolute;
-width:1px;
-height:1px;
-opacity:0;
-pointer-events:none;
-}
-
-</style>
+        .ar-button {
+            background-color: var(--gold); border-radius: 4px;
+            border: none; position: absolute; bottom: 16px; right: 16px;
+            padding: 10px 20px; color: white;
+        }
+    </style>
 </head>
-
 <body>
 
-<div id="start">
-<button onclick="enter()">Entra</button>
-</div>
+    <div id="splash-screen">
+        <h1 style="letter-spacing: 5px;">STUDIO DESIGN</h1>
+        <button class="category-btn" style="width: 200px;" onclick="enterExperience()">ENTRA</button>
+    </div>
 
-<audio id="dish" src="sounds/piatti.mp3" preload="auto"></audio>
+    <div id="main-menu">
+        <h2 style="color: var(--gold);">PORTFOLIO</h2>
+        
+        <button class="category-btn" onclick="showCategory('lavori-svolti')">Lavori Svolti</button>
+        <div id="lavori-svolti" class="project-list">
+            <div class="project-item" onclick="open3D('Living Room Moderno', 'https://modelviewer.dev/shared-assets/models/Astronaut.glb')">
+                <span>Living Room Moderno</span> <span>→</span>
+            </div>
+            <div class="project-item" onclick="open3D('Cucina Minimal', 'https://modelviewer.dev/shared-assets/models/Astronaut.glb')">
+                <span>Cucina Minimal</span> <span>→</span>
+            </div>
+        </div>
 
-<header>
-<img src="images/logo.png">
-</header>
+        <button class="category-btn" onclick="showCategory('lavori-attuali')">Lavori Attuali</button>
+        <div id="lavori-attuali" class="project-list">
+            <div class="project-item" onclick="open3D('Ufficio Open Space', 'https://modelviewer.dev/shared-assets/models/Astronaut.glb')">
+                <span>Ufficio Open Space</span> <span>→</span>
+            </div>
+        </div>
+    </div>
 
-<div class="menu">
+    <div id="viewer-container">
+        <button class="back-btn" onclick="close3D()">← INDIETRO</button>
+        <model-viewer 
+            id="model"
+            src="" 
+            ar 
+            ar-modes="webxr scene-viewer quick-look" 
+            camera-controls 
+            shadow-intensity="1" 
+            auto-rotate>
+            
+            <button slot="ar-button" class="ar-button">
+                VEDI IN CASA TUA (AR)
+            </button>
+        </model-viewer>
+        <div id="model-title" style="color: #333; text-align: center; font-weight: bold;"></div>
+    </div>
 
-<div class="section">
+    <script>
+        function enterExperience() {
+            document.getElementById('splash-screen').style.display = 'none';
+            document.getElementById('main-menu').style.display = 'block';
+        }
 
-<div class="section-title">Pizze Classiche</div>
+        function showCategory(id) {
+            const lists = document.querySelectorAll('.project-list');
+            lists.forEach(list => list.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+        }
 
-<div class="list">
+        function open3D(title, modelUrl) {
+            const container = document.getElementById('viewer-container');
+            const model = document.getElementById('model');
+            const titleDiv = document.getElementById('model-title');
+            
+            model.src = modelUrl;
+            titleDiv.innerText = title;
+            container.style.display = 'block';
+        }
 
-<div class="item" onclick="openAR('pizza')">Margherita</div>
-
-<div class="item" onclick="openAR('pizza')">Diavola</div>
-
-<div class="item" onclick="openAR('pizzaballerina')">Capricciosa</div>
-
-<div class="item" onclick="openAR('pizza')">Quattro Formaggi</div>
-
-</div>
-
-</div>
-
-
-<div class="section">
-
-<div class="section-title">Pizze Speciali</div>
-
-<div class="list">
-
-<div class="item" onclick="openAR('pizza')">Burrata</div>
-
-<div class="item" onclick="openAR('pizza')">Diavola</div>
-
-<div class="item" onclick="openAR('pizzaballerina')">Capricciosa</div>
-
-</div>
-
-</div>
-
-</div>
-
-<model-viewer
-id="ar"
-ar
-ar-modes="scene-viewer quick-look webxr"
-ar-scale="fixed"
-camera-controls
-interaction-prompt="none">
-</model-viewer>
-
-<script>
-
-let unlocked=false;
-
-function enter(){
-unlocked=true;
-document.getElementById("start").style.display="none";
-}
-
-function openAR(model){
-
-if(!unlocked) return;
-
-const dish=document.getElementById("dish");
-
-dish.currentTime=0;
-dish.play().catch(()=>{});
-
-const viewer=document.getElementById("ar");
-
-/* reset modello */
-
-viewer.src="";
-viewer.removeAttribute("ios-src");
-
-/* carica modello */
-
-viewer.src="models/"+model+".glb";
-viewer.setAttribute("ios-src","models/"+model+".usdz");
-
-/* avvia AR */
-
-viewer.activateAR();
-
-}
-
-</script>
-
+        function close3D() {
+            document.getElementById('viewer-container').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
